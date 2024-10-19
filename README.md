@@ -21,7 +21,7 @@ index=dhcp \\you can add your own specific range or criteria here
 | rex field=dest_mac "(?P<prefix>[^\:]+\:[^\:]+\:[^\:]+)"
 | eval prefix=lower(prefix)
 | lookup mac-vendors-export.csv "Mac Prefix" as prefix OUTPUT "Mac Prefix" as found_prefix
-| where isnull(found_prefix) AND NOT match(nt_host, "^(AP|PC|PF|poly).*")
+| where isnull(found_prefix) AND NOT match(nt_host, "^(exclusion some legitimate hostnames).*")
 | eval error=if(isnull(found_prefix), "Not Known Mac Address: Prefix not found", "Lookup successful")
 | dedup dest_mac nt_host dest_ip prefix
 | table _time dest_mac nt_host dest_ip prefix found_prefix error
